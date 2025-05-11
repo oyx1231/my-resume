@@ -1,0 +1,32 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "我的个人简历" } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content={description}>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>{title}</title>
+  <link rel="stylesheet" href="/src/styles/global.css">
+  <style>
+    /* 可以放一些此布局特有的内联样式，或者在 global.css 中定义 */
+  </style>
+</head>
+<body>
+  <main>
+    <slot /> {/* 页面内容将插入此处 */}
+  </main>
+  <footer>
+    <p>© {new Date().getFullYear()} {Astro.locals.profile?.name || '你的名字'}. Built with Astro.</p>
+  </footer>
+</body>
+</html>
+<script>
+  // 可以在这里添加少量客户端脚本，但对于简历通常不需要
+</script>

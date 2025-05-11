@@ -1,11 +1,111 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Section from '../components/Section.astro';
+import ExperienceItem from '../components/ExperienceItem.astro';
+import SkillTag from '../components/SkillTag.astro';
+import { profile, about, experiences, education, skills, projects } from '../data/resumeData';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const pageTitle = `${profile.name} - ${profile.title}`;
 ---
+<BaseLayout title={pageTitle} description={`个人简历 - ${profile.name}, ${profile.title}`}>
+  <div class="resume-container">
+    <Header />
 
-<Layout>
-	<Welcome />
-</Layout>
+    <Section title="关于我">
+      <p>{about}</p>
+    </Section>
+
+    <Section title="工作经历">
+      {experiences.map(exp => (
+        <ExperienceItem
+          company={exp.company}
+          role={exp.role}
+          period={exp.period}
+          description={exp.description}
+        />
+      ))}
+    </Section>
+
+    <Section title="教育背景">
+      {education.map(edu => (
+        <div class="education-item">
+          <h4>{edu.degree}</h4>
+          <p>{edu.institution} ({edu.period})</p>
+        </div>
+      ))}
+    </Section>
+
+    <Section title="专业技能">
+      {Object.entries(skills).map(([category, skillList]) => (
+        <div class="skill-category">
+          <h5>{category.charAt(0).toUpperCase() + category.slice(1)}:</h5>
+          <div class="skill-tags">
+            {skillList.map(skill => <SkillTag skill={skill} />)}
+          </div>
+        </div>
+      ))}
+    </Section>
+
+    {projects && projects.length > 0 && (
+      <Section title="项目经验">
+        {projects.map(proj => (
+          <div class="project-item">
+            <h4>
+              {proj.link ? <a href={proj.link} target="_blank" rel="noopener noreferrer">{proj.name}</a> : proj.name}
+            </h4>
+            <p>{proj.description}</p>
+          </div>
+        ))}
+      </Section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .resume-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    border-radius: 8px;
+  }
+  .education-item, .project-item {
+    margin-bottom: 1rem;
+  }
+  .education-item h4, .project-item h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+  }
+  .education-item p, .project-item p {
+    margin: 0;
+    color: #555;
+  }
+  .project-item a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  .project-item a:hover {
+    text-decoration: underline;
+  }
+  .skill-category {
+    margin-bottom: 1rem;
+  }
+  .skill-category h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #555;
+  }
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+  }
+   @media (max-width: 600px) {
+    .resume-container {
+      margin: 1rem;
+      padding: 1.5rem;
+    }
+  }
+</style>
